@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hey There</title>
+  <style>
+    :root {
+      --bg1: #fef9f3;
+      --bg2: #e6f4ff;
+      --card: #ffffff;
+      --text: #1f2937;
+      --accent: #0ea5e9;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      background: radial-gradient(circle at 20% 20%, var(--bg2), var(--bg1));
+      color: var(--text);
+    }
+
+    .card {
+      width: min(90vw, 360px);
+      padding: 1.5rem;
+      border-radius: 18px;
+      background: var(--card);
+      text-align: center;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+      animation: floatIn 600ms ease-out;
+    }
+
+    h1 {
+      margin: 0 0 0.75rem;
+      font-size: 2rem;
+      letter-spacing: 0.5px;
+      color: #111827;
+    }
+
+    img {
+      width: 90px;
+      height: 90px;
+      display: block;
+      margin: 0 auto 0.5rem;
+    }
+
+    p {
+      margin: 0;
+      color: #374151;
+      font-size: 0.95rem;
+    }
+
+    @keyframes floatIn {
+      from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <img
+      alt="Small smiling sun"
+      src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='28' fill='%23facc15'/%3E%3Cg stroke='%23f59e0b' stroke-width='6' stroke-linecap='round'%3E%3Cline x1='60' y1='12' x2='60' y2='28'/%3E%3Cline x1='60' y1='92' x2='60' y2='108'/%3E%3Cline x1='12' y1='60' x2='28' y2='60'/%3E%3Cline x1='92' y1='60' x2='108' y2='60'/%3E%3Cline x1='24' y1='24' x2='35' y2='35'/%3E%3Cline x1='85' y1='85' x2='96' y2='96'/%3E%3Cline x1='24' y1='96' x2='35' y2='85'/%3E%3Cline x1='85' y1='35' x2='96' y2='24'/%3E%3C/g%3E%3Ccircle cx='50' cy='58' r='3.8' fill='%231f2937'/%3E%3Ccircle cx='70' cy='58' r='3.8' fill='%231f2937'/%3E%3Cpath d='M48 71c4 5 20 5 24 0' fill='none' stroke='%231f2937' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E"
+    />
+    <h1>hey there</h1>
+  </main>
+</body>
+</html>
