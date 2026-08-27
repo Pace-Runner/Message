@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hey There</title>
+  <title>Wanna Play?</title>
   <style>
     :root {
       --bg1: #fef9f3;
@@ -11,6 +11,7 @@
       --card: #ffffff;
       --text: #1f2937;
       --accent: #0ea5e9;
+      --pink: #ec4899;
     }
 
     * {
@@ -25,36 +26,166 @@
       font-family: "Trebuchet MS", "Segoe UI", sans-serif;
       background: radial-gradient(circle at 20% 20%, var(--bg2), var(--bg1));
       color: var(--text);
+      overflow: hidden;
     }
 
     .card {
-      width: min(90vw, 360px);
-      padding: 1.5rem;
-      border-radius: 18px;
+      position: relative;
+      width: min(92vw, 460px);
+      min-height: 420px;
+      padding: 2rem;
+      border-radius: 22px;
       background: var(--card);
       text-align: center;
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.14);
       animation: floatIn 600ms ease-out;
+      display: flex;
+      flex-direction: column;
     }
 
     h1 {
-      margin: 0 0 0.75rem;
-      font-size: 2rem;
+      margin: 0 0 0.5rem;
+      font-size: 2.1rem;
       letter-spacing: 0.5px;
       color: #111827;
     }
 
-    img {
-      width: 90px;
-      height: 90px;
+    img.char {
+      width: 150px;
+      height: 150px;
       display: block;
-      margin: 0 auto 0.5rem;
+      margin: 0 auto 0.6rem;
+    }
+
+    img.char.char-sm {
+      width: 96px;
+      height: 96px;
+      margin-bottom: 0.4rem;
     }
 
     p {
-      margin: 0;
+      margin: 0 0 1.25rem;
       color: #374151;
-      font-size: 0.95rem;
+      font-size: 1.05rem;
+    }
+
+    .screen {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    .button-row {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.2rem;
+      height: 110px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      font-family: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 120ms ease, opacity 200ms ease, background 200ms ease;
+    }
+
+    .yes {
+      padding: 0.9rem 2rem;
+      font-size: 1.2rem;
+      background: linear-gradient(135deg, var(--accent), #38bdf8);
+      color: white;
+      box-shadow: 0 6px 16px rgba(14, 165, 233, 0.35);
+    }
+
+    .yes:hover {
+      transform: scale(1.08);
+    }
+
+    .no {
+      padding: 0.9rem 2rem;
+      font-size: 1.2rem;
+      background: #f3f4f6;
+      color: #4b5563;
+      position: relative;
+    }
+
+    .hint {
+      margin-top: 0.9rem;
+      font-size: 0.9rem;
+      color: #9ca3af;
+      min-height: 1.2em;
+      transition: opacity 200ms ease;
+    }
+
+    .game-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-top: 0.25rem;
+    }
+
+    .game-btn {
+      padding: 0.9rem 0.6rem;
+      border: none;
+      border-radius: 14px;
+      background: #f9fafb;
+      border: 2px solid transparent;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 1.02rem;
+      color: var(--text);
+      cursor: pointer;
+      transition: transform 120ms ease, border-color 150ms ease, background 150ms ease;
+    }
+
+    .game-btn:hover {
+      transform: translateY(-2px) scale(1.03);
+      border-color: var(--accent);
+      background: #eff6ff;
+    }
+
+    .game-btn.other {
+      grid-column: 1 / -1;
+    }
+
+    #otherInput {
+      display: none;
+      margin-top: 0.85rem;
+      width: 100%;
+      padding: 0.7rem 0.9rem;
+      border-radius: 12px;
+      border: 2px solid #e5e7eb;
+      font-family: inherit;
+      font-size: 1rem;
+      text-align: center;
+    }
+
+    #otherInput:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    #confirmTitle {
+      color: var(--pink);
+    }
+
+    #screen-confirm img.char {
+      animation: pulse 900ms ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
     }
 
     @keyframes floatIn {
@@ -67,15 +198,191 @@
         transform: translateY(0) scale(1);
       }
     }
+
+    .confetti-piece {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 1;
+      animation: confetti-burst 950ms ease-out forwards;
+    }
+
+    @keyframes confetti-burst {
+      0% {
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(0.5);
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 <body>
-  <main class="card">
-    <img
-      alt="Small smiling sun"
-      src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Ccircle cx='60' cy='60' r='28' fill='%23facc15'/%3E%3Cg stroke='%23f59e0b' stroke-width='6' stroke-linecap='round'%3E%3Cline x1='60' y1='12' x2='60' y2='28'/%3E%3Cline x1='60' y1='92' x2='60' y2='108'/%3E%3Cline x1='12' y1='60' x2='28' y2='60'/%3E%3Cline x1='92' y1='60' x2='108' y2='60'/%3E%3Cline x1='24' y1='24' x2='35' y2='35'/%3E%3Cline x1='85' y1='85' x2='96' y2='96'/%3E%3Cline x1='24' y1='96' x2='35' y2='85'/%3E%3Cline x1='85' y1='35' x2='96' y2='24'/%3E%3C/g%3E%3Ccircle cx='50' cy='58' r='3.8' fill='%231f2937'/%3E%3Ccircle cx='70' cy='58' r='3.8' fill='%231f2937'/%3E%3Cpath d='M48 71c4 5 20 5 24 0' fill='none' stroke='%231f2937' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E"
-    />
-    <h1>hey there</h1>
+  <main class="card" id="card">
+    <div class="screen active" id="screen-ask">
+      <img
+        class="char"
+        alt="Cute yellow emoji happily holding a game controller"
+        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 140'%3E%3Ccircle cx='22' cy='108' r='15' fill='%23fbbf24'/%3E%3Ccircle cx='118' cy='108' r='15' fill='%23fbbf24'/%3E%3Crect x='28' y='92' width='84' height='36' rx='18' fill='%23374151'/%3E%3Crect x='34' y='102' width='4' height='12' rx='1.5' fill='%239ca3af'/%3E%3Crect x='30' y='106' width='12' height='4' rx='1.5' fill='%239ca3af'/%3E%3Ccircle cx='90' cy='104' r='4' fill='%23f87171'/%3E%3Ccircle cx='98' cy='112' r='4' fill='%2334d399'/%3E%3Ccircle cx='82' cy='112' r='4' fill='%23fbbf24'/%3E%3Ccircle cx='90' cy='120' r='4' fill='%2360a5fa'/%3E%3Ccircle cx='50' cy='110' r='7' fill='%231f2937'/%3E%3Ccircle cx='50' cy='110' r='3.2' fill='%236b7280'/%3E%3Ccircle cx='70' cy='55' r='48' fill='%23fbbf24'/%3E%3Cpath d='M42 34q8-10 18-4' fill='none' stroke='%2392400e' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M80 30q10-6 18 4' fill='none' stroke='%2392400e' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='52' r='13' fill='%23ffffff'/%3E%3Ccircle cx='90' cy='52' r='13' fill='%23ffffff'/%3E%3Ccircle cx='48' cy='57' r='7.5' fill='%231f2937'/%3E%3Ccircle cx='92' cy='57' r='7.5' fill='%231f2937'/%3E%3Ccircle cx='45' cy='53' r='2.2' fill='%23ffffff'/%3E%3Ccircle cx='89' cy='53' r='2.2' fill='%23ffffff'/%3E%3Cellipse cx='33' cy='72' rx='9' ry='5.5' fill='%23f97316' opacity='0.55'/%3E%3Cellipse cx='107' cy='72' rx='9' ry='5.5' fill='%23f97316' opacity='0.55'/%3E%3Cpath d='M48 78q22 30 44 0q-22 16 -44 0Z' fill='%237c2d12'/%3E%3Cellipse cx='70' cy='96' rx='11' ry='7' fill='%23f472b6'/%3E%3Cpath d='M53 79q17 12 34 0' fill='none' stroke='%23ffffff' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E"
+      />
+      <h1>hey there~</h1>
+      <p>wanna play some games together? 🎮</p>
+      <div class="button-row" id="buttonRow">
+        <button type="button" class="btn yes" id="yesBtn">yes!! 💖</button>
+        <button type="button" class="btn no" id="noBtn">no</button>
+      </div>
+      <div class="hint" id="hint">&nbsp;</div>
+    </div>
+
+    <div class="screen" id="screen-pick">
+      <img
+        class="char char-sm"
+        alt="Cute yellow emoji happily holding a game controller"
+        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 140'%3E%3Ccircle cx='22' cy='108' r='15' fill='%23fbbf24'/%3E%3Ccircle cx='118' cy='108' r='15' fill='%23fbbf24'/%3E%3Crect x='28' y='92' width='84' height='36' rx='18' fill='%23374151'/%3E%3Crect x='34' y='102' width='4' height='12' rx='1.5' fill='%239ca3af'/%3E%3Crect x='30' y='106' width='12' height='4' rx='1.5' fill='%239ca3af'/%3E%3Ccircle cx='90' cy='104' r='4' fill='%23f87171'/%3E%3Ccircle cx='98' cy='112' r='4' fill='%2334d399'/%3E%3Ccircle cx='82' cy='112' r='4' fill='%23fbbf24'/%3E%3Ccircle cx='90' cy='120' r='4' fill='%2360a5fa'/%3E%3Ccircle cx='50' cy='110' r='7' fill='%231f2937'/%3E%3Ccircle cx='50' cy='110' r='3.2' fill='%236b7280'/%3E%3Ccircle cx='70' cy='55' r='48' fill='%23fbbf24'/%3E%3Cpath d='M42 34q8-10 18-4' fill='none' stroke='%2392400e' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M80 30q10-6 18 4' fill='none' stroke='%2392400e' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='52' r='13' fill='%23ffffff'/%3E%3Ccircle cx='90' cy='52' r='13' fill='%23ffffff'/%3E%3Ccircle cx='48' cy='57' r='7.5' fill='%231f2937'/%3E%3Ccircle cx='92' cy='57' r='7.5' fill='%231f2937'/%3E%3Ccircle cx='45' cy='53' r='2.2' fill='%23ffffff'/%3E%3Ccircle cx='89' cy='53' r='2.2' fill='%23ffffff'/%3E%3Cellipse cx='33' cy='72' rx='9' ry='5.5' fill='%23f97316' opacity='0.55'/%3E%3Cellipse cx='107' cy='72' rx='9' ry='5.5' fill='%23f97316' opacity='0.55'/%3E%3Cpath d='M48 78q22 30 44 0q-22 16 -44 0Z' fill='%237c2d12'/%3E%3Cellipse cx='70' cy='96' rx='11' ry='7' fill='%23f472b6'/%3E%3Cpath d='M53 79q17 12 34 0' fill='none' stroke='%23ffffff' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E"
+      />
+      <h1>yay!! pick one~ 🎉</h1>
+      <div class="game-grid">
+        <button type="button" class="game-btn" data-game="Valorant">🔫 Valorant</button>
+        <button type="button" class="game-btn" data-game="Rust">🪓 Rust</button>
+        <button type="button" class="game-btn" data-game="Minecraft">⛏️ Minecraft</button>
+        <button type="button" class="game-btn" data-game="Phasmophobia">👻 Phasmophobia</button>
+        <button type="button" class="game-btn" data-game="Elden Ring">⚔️ Elden Ring</button>
+        <button type="button" class="game-btn" data-game="Apex">🪂 Apex</button>
+        <button type="button" class="game-btn other" data-game="Other">✨ Other</button>
+      </div>
+      <input type="text" id="otherInput" placeholder="what game? :3" maxlength="40" />
+    </div>
+
+    <div class="screen" id="screen-confirm">
+      <img
+        class="char"
+        alt="Cute yellow emoji happily holding a game controller"
+        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 140'%3E%3Ccircle cx='22' cy='108' r='15' fill='%23fbbf24'/%3E%3Ccircle cx='118' cy='108' r='15' fill='%23fbbf24'/%3E%3Crect x='28' y='92' width='84' height='36' rx='18' fill='%23374151'/%3E%3Crect x='34' y='102' width='4' height='12' rx='1.5' fill='%239ca3af'/%3E%3Crect x='30' y='106' width='12' height='4' rx='1.5' fill='%239ca3af'/%3E%3Ccircle cx='90' cy='104' r='4' fill='%23f87171'/%3E%3Ccircle cx='98' cy='112' r='4' fill='%2334d399'/%3E%3Ccircle cx='82' cy='112' r='4' fill='%23fbbf24'/%3E%3Ccircle cx='90' cy='120' r='4' fill='%2360a5fa'/%3E%3Ccircle cx='50' cy='110' r='7' fill='%231f2937'/%3E%3Ccircle cx='50' cy='110' r='3.2' fill='%236b7280'/%3E%3Ccircle cx='70' cy='55' r='48' fill='%23fbbf24'/%3E%3Cpath d='M42 34q8-10 18-4' fill='none' stroke='%2392400e' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M80 30q10-6 18 4' fill='none' stroke='%2392400e' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='52' r='13' fill='%23ffffff'/%3E%3Ccircle cx='90' cy='52' r='13' fill='%23ffffff'/%3E%3Ccircle cx='48' cy='57' r='7.5' fill='%231f2937'/%3E%3Ccircle cx='92' cy='57' r='7.5' fill='%231f2937'/%3E%3Ccircle cx='45' cy='53' r='2.2' fill='%23ffffff'/%3E%3Ccircle cx='89' cy='53' r='2.2' fill='%23ffffff'/%3E%3Cellipse cx='33' cy='72' rx='9' ry='5.5' fill='%23f97316' opacity='0.55'/%3E%3Cellipse cx='107' cy='72' rx='9' ry='5.5' fill='%23f97316' opacity='0.55'/%3E%3Cpath d='M48 78q22 30 44 0q-22 16 -44 0Z' fill='%237c2d12'/%3E%3Cellipse cx='70' cy='96' rx='11' ry='7' fill='%23f472b6'/%3E%3Cpath d='M53 79q17 12 34 0' fill='none' stroke='%23ffffff' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E"
+      />
+      <h1 id="confirmTitle"></h1>
+      <p>can't wait, this'll be so fun~ ✨</p>
+    </div>
   </main>
+
+  <script>
+    const card = document.getElementById("card");
+    const buttonRow = document.getElementById("buttonRow");
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const hint = document.getElementById("hint");
+
+    const noPhrases = [
+      "hehe, nope~",
+      "not gonna work",
+      "try again?",
+      "getting smaller...",
+      "almost gone!",
+      "you can't say no >:3",
+    ];
+
+    let shrinkStep = 0;
+    const maxSteps = 6;
+
+    function shrinkNo() {
+      if (shrinkStep >= maxSteps) return;
+      shrinkStep++;
+
+      const scale = Math.max(1 - shrinkStep * 0.15, 0.1);
+      noBtn.style.transform = `scale(${scale})`;
+      noBtn.style.opacity = String(Math.max(1 - shrinkStep * 0.1, 0.35));
+
+      const rowRect = buttonRow.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+      const maxX = Math.max(rowRect.width - btnRect.width, 0);
+      const maxY = Math.max(rowRect.height - btnRect.height, 0);
+      const randX = Math.random() * maxX;
+      const randY = Math.random() * maxY;
+
+      noBtn.style.position = "absolute";
+      noBtn.style.left = `${randX}px`;
+      noBtn.style.top = `${randY}px`;
+
+      hint.textContent = noPhrases[Math.min(shrinkStep - 1, noPhrases.length - 1)];
+
+      if (shrinkStep >= maxSteps) {
+        noBtn.style.pointerEvents = "none";
+        hint.textContent = "guess it's a yes then~ 💕";
+      }
+    }
+
+    noBtn.addEventListener("click", shrinkNo);
+
+    const screenAsk = document.getElementById("screen-ask");
+    const screenPick = document.getElementById("screen-pick");
+    const screenConfirm = document.getElementById("screen-confirm");
+    const otherInput = document.getElementById("otherInput");
+    const confirmTitle = document.getElementById("confirmTitle");
+
+    function showScreen(screen) {
+      [screenAsk, screenPick, screenConfirm].forEach((s) =>
+        s.classList.remove("active")
+      );
+      screen.classList.add("active");
+    }
+
+    const confettiColors = ["#f87171", "#fbbf24", "#34d399", "#60a5fa", "#f472b6", "#a78bfa"];
+
+    function launchConfetti() {
+      const count = 70;
+      for (let i = 0; i < count; i++) {
+        const piece = document.createElement("div");
+        piece.className = "confetti-piece";
+
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 90 + Math.random() * 260;
+        const tx = Math.cos(angle) * distance;
+        const ty = Math.sin(angle) * distance - 40;
+
+        piece.style.setProperty("--tx", `${tx}px`);
+        piece.style.setProperty("--ty", `${ty}px`);
+        piece.style.setProperty("--rot", `${Math.random() * 720 - 360}deg`);
+        piece.style.background = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+        piece.style.width = `${6 + Math.random() * 6}px`;
+        piece.style.height = `${10 + Math.random() * 8}px`;
+        piece.style.borderRadius = Math.random() > 0.5 ? "50%" : "2px";
+        piece.style.animationDelay = `${Math.random() * 100}ms`;
+
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 1100);
+      }
+    }
+
+    function celebrate(game) {
+      confirmTitle.textContent = `let's play ${game}!!`;
+      showScreen(screenConfirm);
+      launchConfetti();
+    }
+
+    yesBtn.addEventListener("click", () => {
+      showScreen(screenPick);
+    });
+
+    document.querySelectorAll(".game-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const game = btn.dataset.game;
+        if (game === "Other") {
+          otherInput.style.display = "block";
+          otherInput.focus();
+          return;
+        }
+        celebrate(game);
+      });
+    });
+
+    otherInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && otherInput.value.trim()) {
+        celebrate(otherInput.value.trim());
+      }
+    });
+  </script>
 </body>
 </html>
